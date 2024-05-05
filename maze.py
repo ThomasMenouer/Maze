@@ -1,4 +1,5 @@
 import pygame
+import random
 from cell import Cell
 
 # pygame setup
@@ -7,7 +8,6 @@ pygame.init()
 
 class Maze:
     def __init__(self):
-
         self.screen_width: int = 600
         self.screen_height: int = 600
         self.cell_size: int = 30
@@ -23,15 +23,37 @@ class Maze:
                      for y in range(self.rows)]
 
         self.current_cell = self.grid[0][0]
-        self.stack = []
+        self.stack: list[object] = []
+
+        self.start = self.grid[0][random.randint(0, self.cols - 1)]
+        self.end = self.grid[self.rows - 1][random.randint(0, self.cols - 1)]
 
     def display(self) -> None:
 
         self.screen.fill((0, 0, 0))  # Remplissage de l'écran en noir
 
         for row in range(self.rows):  # Boucle sur les lignes en premier
+
             for col in range(self.cols):  # Boucle sur les colonnes ensuite
+
                 self.grid[row][col].draw(self.screen)
+
+                if self.maze_complete():
+
+                    if self.grid[row][col] == self.start:
+                        pygame.draw.circle(self.screen,
+                                           (0, 255, 0),
+                                           (self.grid[row][col].x + self.cell_size // 2,
+                                            self.grid[row][col].y + self.cell_size // 2),
+                                           self.cell_size // 4)  # Dessiner un cercle au centre de la cellule
+
+                    if self.grid[row][col] == self.end:
+                        pygame.draw.circle(self.screen,
+                                           (255, 0, 0),
+                                           (self.grid[row][col].x + self.cell_size // 2,
+                                            self.grid[row][col].y + self.cell_size // 2),
+                                           self.cell_size // 4)  # Dessiner un cercle au centre de la cellule
+
         pygame.display.flip()  # Actualisation de l'écran
 
     def handling_events(self) -> None:
@@ -41,7 +63,7 @@ class Maze:
 
     def update(self) -> None:
 
-        self.current_cell.isVisited = True
+        self.current_cell.is_visited = True
 
         self.current_cell.check_neighbors(self.current_cell, self.grid)
 
@@ -52,6 +74,13 @@ class Maze:
         else:
             if self.stack:
                 self.current_cell = self.stack.pop()
+
+    def maze_complete(self) -> bool:
+        for row in range(self.rows):
+            for col in range(self.cols):
+                if not self.grid[row][col].is_visited:
+                    return False
+        return True
 
     def run(self) -> None:
         while self.running:

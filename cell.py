@@ -8,7 +8,7 @@ class Cell:
         self.y: int = y
         self.cell_size: int = cell_size
         self.walls: dict = {'top': True, 'right': True, 'bottom': True, 'left': True}
-        self.isVisited: bool = False
+        self.is_visited: bool = False
         self.neighbors: list[object] = []
 
     def draw(self, screen) -> None:
@@ -37,7 +37,7 @@ class Cell:
                              (self.x, self.y),
                              2)
 
-        if self.isVisited:
+        if self.is_visited:
             pygame.draw.rect(screen,
                              (255, 0, 255),
                              pygame.Rect(self.x + 1, self.y + 1, self.cell_size, self.cell_size))
@@ -80,7 +80,7 @@ class Cell:
 
         row, col = current_cell.y // self.cell_size, current_cell.x // self.cell_size
 
-        unvisited_neighbors = [neighbor for neighbor in neighbors if not neighbor.isVisited]
+        unvisited_neighbors = [neighbor for neighbor in neighbors if not neighbor.is_visited]
 
         # The neighbor chosen become the current cell
         if unvisited_neighbors:
