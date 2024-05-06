@@ -1,5 +1,6 @@
 import random
 import pygame
+import colors
 
 
 class Cell:
@@ -14,32 +15,32 @@ class Cell:
     def draw(self, screen) -> None:
         if self.walls['top']:
             pygame.draw.line(screen,
-                             (255, 255, 255),
+                             colors.white_color,
                              (self.x, self.y),
                              (self.x + self.cell_size, self.y),
-                             2)
+                             1)
         if self.walls['right']:
             pygame.draw.line(screen,
-                             (255, 255, 255),
+                             colors.white_color,
                              (self.x + self.cell_size, self.y),
                              (self.x + self.cell_size, self.y + self.cell_size),
-                             2)
+                             1)
         if self.walls['bottom']:
             pygame.draw.line(screen,
-                             (255, 255, 255),
+                             colors.white_color,
                              (self.x + self.cell_size, self.y + self.cell_size),
                              (self.x, self.y + self.cell_size),
-                             2)
+                             1)
         if self.walls['left']:
             pygame.draw.line(screen,
-                             (255, 255, 255),
+                             colors.white_color,
                              (self.x, self.y + self.cell_size),
                              (self.x, self.y),
-                             2)
+                             1)
 
         if self.is_visited:
             pygame.draw.rect(screen,
-                             (255, 0, 255),
+                             colors.black_color,
                              pygame.Rect(self.x + 1, self.y + 1, self.cell_size, self.cell_size))
 
         # for neighbor in self.neighbors:
@@ -80,7 +81,7 @@ class Cell:
 
         row, col = current_cell.y // self.cell_size, current_cell.x // self.cell_size
 
-        unvisited_neighbors = [neighbor for neighbor in neighbors if not neighbor.is_visited]
+        unvisited_neighbors: list[object] = [neighbor for neighbor in neighbors if not neighbor.is_visited]
 
         # The neighbor chosen become the current cell
         if unvisited_neighbors:

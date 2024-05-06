@@ -1,5 +1,6 @@
 import pygame
 import random
+import colors
 from cell import Cell
 
 # pygame setup
@@ -15,7 +16,7 @@ class Maze:
         self.rows: int = self.screen_width // self.cell_size
         self.cols: int = self.screen_height // self.cell_size
 
-        self.screen = pygame.display.set_mode((self.screen_width + 1, self.screen_height + 1))
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         self.running: bool = True
         self.clock = pygame.time.Clock()
 
@@ -30,7 +31,7 @@ class Maze:
 
     def display(self) -> None:
 
-        self.screen.fill((0, 0, 0))  # Remplissage de l'écran en noir
+        self.screen.fill(colors.bg_color)  # Remplissage de l'écran en noir
 
         for row in range(self.rows):  # Boucle sur les lignes en premier
 
@@ -38,18 +39,24 @@ class Maze:
 
                 self.grid[row][col].draw(self.screen)
 
+                if self.current_cell and not self.maze_complete():
+                    pygame.draw.rect(self.screen,
+                                     colors.blue_color,
+                                     pygame.Rect(self.current_cell.x + 1, self.current_cell.y + 1,
+                                                 self.cell_size, self.cell_size))
+
                 if self.maze_complete():
 
                     if self.grid[row][col] == self.start:
                         pygame.draw.circle(self.screen,
-                                           (0, 255, 0),
+                                           colors.green_color,
                                            (self.grid[row][col].x + self.cell_size // 2,
                                             self.grid[row][col].y + self.cell_size // 2),
                                            self.cell_size // 4)  # Dessiner un cercle au centre de la cellule
 
                     if self.grid[row][col] == self.end:
                         pygame.draw.circle(self.screen,
-                                           (255, 0, 0),
+                                           colors.red_color,
                                            (self.grid[row][col].x + self.cell_size // 2,
                                             self.grid[row][col].y + self.cell_size // 2),
                                            self.cell_size // 4)  # Dessiner un cercle au centre de la cellule
