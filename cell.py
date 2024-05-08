@@ -7,7 +7,7 @@ class Cell:
     def __init__(self, x: int, y: int, cell_size: int):
         self.x: int = x
         self.y: int = y
-        self.cell_size: int = cell_size
+        self.CELL_SIZE: int = cell_size
         self.walls: dict = {
             'top': True,
             'right': True,
@@ -21,49 +21,49 @@ class Cell:
     def draw(self, screen) -> None:
         if self.walls['top']:
             pygame.draw.line(screen,
-                             colors.white_color,
+                             colors.WHITE_COLOR,
                              (self.x, self.y),
-                             (self.x + self.cell_size, self.y),
+                             (self.x + self.CELL_SIZE, self.y),
                              1)
         if self.walls['right']:
             pygame.draw.line(screen,
-                             colors.white_color,
-                             (self.x + self.cell_size, self.y),
-                             (self.x + self.cell_size, self.y + self.cell_size),
+                             colors.WHITE_COLOR,
+                             (self.x + self.CELL_SIZE, self.y),
+                             (self.x + self.CELL_SIZE, self.y + self.CELL_SIZE),
                              1)
         if self.walls['bottom']:
             pygame.draw.line(screen,
-                             colors.white_color,
-                             (self.x + self.cell_size, self.y + self.cell_size),
-                             (self.x, self.y + self.cell_size),
+                             colors.WHITE_COLOR,
+                             (self.x + self.CELL_SIZE, self.y + self.CELL_SIZE),
+                             (self.x, self.y + self.CELL_SIZE),
                              1)
         if self.walls['left']:
             pygame.draw.line(screen,
-                             colors.white_color,
-                             (self.x, self.y + self.cell_size),
+                             colors.WHITE_COLOR,
+                             (self.x, self.y + self.CELL_SIZE),
                              (self.x, self.y),
                              1)
 
         if self.is_visited:
             pygame.draw.rect(screen,
-                             colors.black_color,
-                             pygame.Rect(self.x + 1, self.y + 1, self.cell_size, self.cell_size))
+                             colors.BLACK_COLOR,
+                             pygame.Rect(self.x + 1, self.y + 1, self.CELL_SIZE, self.CELL_SIZE))
         if self.is_explored:
             pygame.draw.rect(screen,
-                             colors.green_color,
-                             pygame.Rect(self.x + 1, self.y + 1, self.cell_size, self.cell_size))
+                             colors.GREEN_COLOR,
+                             pygame.Rect(self.x + 1, self.y + 1, self.CELL_SIZE, self.CELL_SIZE))
 
         # for neighbor in self.neighbors:
         #     pygame.draw.rect(screen,
         #                      (0, 0, 255),
-        #                      pygame.Rect(neighbor.x, neighbor.y, self.cell_size, self.cell_size))
+        #                      pygame.Rect(neighbor.x, neighbor.y, self.CELL_SIZE, self.CELL_SIZE))
 
     def remove_wall(self, wall: dict) -> None:
         self.walls[wall] = False
 
     def get_cell_coordinates(self) -> tuple[int, int]:
-        row = self.y // self.cell_size
-        col = self.x // self.cell_size
+        row = self.y // self.CELL_SIZE
+        col = self.x // self.CELL_SIZE
         return row, col
 
     def check_neighbors(self, grid) -> None:

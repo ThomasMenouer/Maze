@@ -9,69 +9,61 @@ pygame.init()
 
 class Maze:
     def __init__(self):
-        self.screen_width: int = 800
-        self.screen_height: int = 800
-        self.cell_size: int = 40
+        self.SCREEN_WIDTH: int = 800
+        self.SCREEN_HEIGHT: int = 800
+        self.CELL_SIZE: int = 40
 
-        self.rows: int = self.screen_width // self.cell_size
-        self.cols: int = self.screen_height // self.cell_size
+        self.ROWS: int = self.SCREEN_WIDTH // self.CELL_SIZE
+        self.COLS: int = self.SCREEN_HEIGHT // self.CELL_SIZE
 
-        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.running: bool = True
         self.clock = pygame.time.Clock()
 
-        self.grid = [[Cell(x * self.cell_size, y * self.cell_size, self.cell_size) for x in range(self.cols)]
-                     for y in range(self.rows)]
+        self.grid = [[Cell(x * self.CELL_SIZE, y * self.CELL_SIZE, self.CELL_SIZE) for x in range(self.COLS)]
+                     for y in range(self.ROWS)]
 
         self.current_cell: Cell = self.grid[0][0]
         self.stack: list[Cell] = []
 
-        self.start: Cell = self.grid[0][random.randint(0, self.cols - 1)]
-        self.end: Cell = self.grid[self.rows - 1][random.randint(0, self.cols - 1)]
+        self.explore_cell: Cell = self.grid[0][random.randint(0, self.COLS - 1)]
+        self.end: Cell = self.grid[self.ROWS - 1][random.randint(0, self.COLS - 1)]
 
         self.explored_stack: list[Cell] = []
-        self.explore_cell: Cell = self.start
 
         # For test
         # random.seed(10)
 
     def display(self) -> None:
 
-        self.screen.fill(colors.bg_color)  # Remplissage de l'écran en noir
+        self.screen.fill(colors.BG_COLOR)  # Remplissage de l'écran en noir
 
-        for row in range(self.rows):  # Boucle sur les lignes en premier
+        for row in range(self.ROWS):  # Boucle sur les lignes en premier
 
-            for col in range(self.cols):  # Boucle sur les colonnes ensuite
+            for col in range(self.COLS):  # Boucle sur les colonnes ensuite
 
                 self.grid[row][col].draw(self.screen)
 
                 if self.current_cell and not self.maze_complete():
                     pygame.draw.rect(self.screen,
-                                     colors.blue_color,
+                                     colors.BLUE_COLOR,
                                      pygame.Rect(self.current_cell.x + 1, self.current_cell.y + 1,
-                                                 self.cell_size, self.cell_size))
+                                                 self.CELL_SIZE, self.CELL_SIZE))
 
                 if self.maze_complete():
 
-                    if self.grid[row][col] == self.start:
-                        pygame.draw.circle(self.screen,
-                                           colors.green_color,
-                                           (self.grid[row][col].x + self.cell_size // 2,
-                                            self.grid[row][col].y + self.cell_size // 2),
-                                           self.cell_size // 4)  # Dessiner un cercle au centre de la cellule
-
                     if self.grid[row][col] == self.end:
                         pygame.draw.circle(self.screen,
-                                           colors.red_color,
-                                           (self.grid[row][col].x + self.cell_size // 2,
-                                            self.grid[row][col].y + self.cell_size // 2),
-                                           self.cell_size // 4)  # Dessiner un cercle au centre de la cellule
+                                           colors.RED_COLOR,
+                                           (self.grid[row][col].x + self.CELL_SIZE // 2,
+                                            self.grid[row][col].y + self.CELL_SIZE // 2),
+                                           self.CELL_SIZE // 4)  # Dessiner un cercle au centre de la cellule
 
                     if self.explore_cell:
                         pygame.draw.rect(self.screen,
-                                         colors.blue_color,
+                                         colors.BLUE_COLOR,
                                          pygame.Rect(self.explore_cell.x + 1, self.explore_cell.y + 1,
-                                                     self.cell_size, self.cell_size))
+                                                     self.CELL_SIZE, self.CELL_SIZE))
 
         pygame.display.flip()  # Actualisation de l'écran
 
@@ -101,8 +93,8 @@ class Maze:
             self.find_exit()
 
     def maze_complete(self) -> bool:
-        for row in range(self.rows):
-            for col in range(self.cols):
+        for row in range(self.ROWS):
+            for col in range(self.COLS):
                 if not self.grid[row][col].is_visited:
                     return False
         return True
@@ -119,7 +111,7 @@ class Maze:
             self.explore_cell.is_explored = True
 
             if not_explored:
-                if col + 1 < self.cols and self.grid[row][col + 1] in not_explored:
+                if col + 1 < self.COLS and self.grid[row][col + 1] in not_explored:
                     next_explore = self.grid[row][col + 1]
                 else:
                     next_explore = random.choice(not_explored)
@@ -139,7 +131,7 @@ class Maze:
         paths: list = []
 
         # Vérifier les cellules voisines pour déterminer les options de déplacement
-        if not self.explore_cell.walls["right"] and col + 1 < self.cols:
+        if not self.explore_cell.walls["right"] and col + 1 < self.COLS:
             paths.append(self.grid[row][col + 1])
 
         if not self.explore_cell.walls["top"] and row > 0:
@@ -148,7 +140,7 @@ class Maze:
         if not self.explore_cell.walls["left"] and col > 0:
             paths.append(self.grid[row][col - 1])
 
-        if not self.explore_cell.walls["bottom"] and row + 1 < self.rows:
+        if not self.explore_cell.walls["bottom"] and row + 1 < self.COLS:
             paths.append(self.grid[row + 1][col])
 
         return paths
