@@ -86,7 +86,7 @@ class Maze:
 
             self.current_cell.is_visited = True
 
-            self.current_cell.check_neighbors(self.current_cell, self.grid)
+            self.current_cell.check_neighbors(self.grid)
 
             next_cell: Cell = self.current_cell.next_cell(self.current_cell,
                                                           self.current_cell.neighbors, self.grid, self.stack)
@@ -108,7 +108,7 @@ class Maze:
         return True
 
     def find_exit(self) -> None:
-        row, col = self.explore_cell.y // self.cell_size, self.explore_cell.x // self.cell_size
+        row, col = self.explore_cell.get_cell_coordinates()
 
         paths: list = self.check_path_possibilities()
 
@@ -134,7 +134,7 @@ class Maze:
 
     def check_path_possibilities(self) -> list:
 
-        row, col = self.explore_cell.y // self.cell_size, self.explore_cell.x // self.cell_size
+        row, col = self.explore_cell.get_cell_coordinates()
 
         paths: list = []
 

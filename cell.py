@@ -61,11 +61,16 @@ class Cell:
     def remove_wall(self, wall: dict) -> None:
         self.walls[wall] = False
 
-    def check_neighbors(self, current_cell, grid) -> None:
+    def get_cell_coordinates(self) -> tuple[int, int]:
+        row = self.y // self.cell_size
+        col = self.x // self.cell_size
+        return row, col
+
+    def check_neighbors(self, grid) -> None:
 
         self.neighbors: list[object] = []
 
-        row, col = current_cell.y // self.cell_size, current_cell.x // self.cell_size
+        row, col = self.get_cell_coordinates()
 
         # Top
         if row > 0:
@@ -89,8 +94,7 @@ class Cell:
 
     def next_cell(self, current_cell, neighbors: list, grid, stack: list[object]):
 
-        # TODO : Cette ligne est répétive dans le code, en faire une méthode et l'appeler.
-        row, col = current_cell.y // self.cell_size, current_cell.x // self.cell_size
+        row, col = self.get_cell_coordinates()
 
         unvisited_neighbors: list[object] = [neighbor for neighbor in neighbors if not neighbor.is_visited]
 
