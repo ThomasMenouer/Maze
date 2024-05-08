@@ -8,9 +8,15 @@ class Cell:
         self.x: int = x
         self.y: int = y
         self.cell_size: int = cell_size
-        self.walls: dict = {'top': True, 'right': True, 'bottom': True, 'left': True}
+        self.walls: dict = {
+            'top': True,
+            'right': True,
+            'bottom': True,
+            'left': True
+        }
         self.is_visited: bool = False
         self.neighbors: list[object] = []
+        self.is_explored: bool = False
 
     def draw(self, screen) -> None:
         if self.walls['top']:
@@ -41,6 +47,10 @@ class Cell:
         if self.is_visited:
             pygame.draw.rect(screen,
                              colors.black_color,
+                             pygame.Rect(self.x + 1, self.y + 1, self.cell_size, self.cell_size))
+        if self.is_explored:
+            pygame.draw.rect(screen,
+                             colors.green_color,
                              pygame.Rect(self.x + 1, self.y + 1, self.cell_size, self.cell_size))
 
         # for neighbor in self.neighbors:
@@ -77,8 +87,9 @@ class Cell:
             bottom = grid[row + 1][col]
             self.neighbors.append(bottom)
 
-    def next_cell(self, current_cell, neighbors, grid, stack: list[object]):
+    def next_cell(self, current_cell, neighbors: list, grid, stack: list[object]):
 
+        # TODO : Cette ligne est répétive dans le code, en faire une méthode et l'appeler.
         row, col = current_cell.y // self.cell_size, current_cell.x // self.cell_size
 
         unvisited_neighbors: list[object] = [neighbor for neighbor in neighbors if not neighbor.is_visited]
